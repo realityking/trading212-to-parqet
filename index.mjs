@@ -41,29 +41,27 @@ const activityMap = {
 
 function convertCsv(input) {
   const errors = [];
-  const records = parse(input);
-  records.shift();
+  const records = parse(input, {columns: true});
 
   const parqetRecords = records.map(record => {
     let type = '';
-    if (record[0] in activityMap) {
-      type = activityMap[record[0]]
+    if (record['Action'] in activityMap) {
+      type = activityMap[record['Action']]
     } else {
-      errors.push([`Missing activity in activity map: "${record[0]}". Skipping the transcaction`]);
-      countFail++;
+      errors.push([`Missing activity in activity map: "${record['Action']}". Skipping the transcaction`]);
 
       return null;
     }
 
-    const shares = new Decimal(record[6]);
-    const pricePerShare = record[7];
-    const pricePerShareCurrency = record[8];
-    const total = record[12];
-    const totalCurrency = record[13];
-    const witholdingTax = record[14];
-    const witholdingTaxCurrency = record[15];
-    const conversionFee = record[16];
-    const conversionFeeCurrency = record[17];
+    const shares = new Decimal(record['No. of shares']);
+    const pricePerShare = record['Price / share'];
+    const pricePerShareCurrency = record['Currency (Price / share)'];
+    const total = record['Total'];
+    const totalCurrency = record['Currency (Total)'];
+    const witholdingTax = record['Withholding tax'];
+    const witholdingTaxCurrency = record['Currency (Withholding tax)'];
+    const conversionFee = record['Currency conversion fee'];
+    const conversionFeeCurrency = record['Currency (Currency conversion fee)'];
 
     let price = ''
     let amount = '';
@@ -102,8 +100,8 @@ function convertCsv(input) {
     }
 
     return {
-      datetime: (new Date(record[1])).toISOString(),
-      identifier: record[2],
+      datetime: (new Date(record['Time'])).toISOString(),
+      identifier: record['ISIN'],
       shares: shares.toString(),
       assetType: 'Security',
       type,
