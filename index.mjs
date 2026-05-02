@@ -59,7 +59,7 @@ function convertCsv(input) {
     const total = record['Total'];
     const totalCurrency = record['Currency (Total)'];
     const witholdingTax = record['Withholding tax'];
-    const witholdingTaxCurrency = record['Currency (Withholding tax)'];
+    const witholdingTaxCurrency = record['Currency (Withholding tax)'] || '';
     const conversionFee = record['Currency conversion fee'];
     const conversionFeeCurrency = record['Currency (Currency conversion fee)'];
 
